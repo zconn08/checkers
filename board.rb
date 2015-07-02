@@ -1,10 +1,11 @@
 require_relative 'display.rb'
 require_relative 'piece.rb'
+require_relative 'empty_space.rb'
 require 'colorize'
 
 class Board
 
-  attr_accessor :grid
+  attr_accessor :grid, :cursor
 
   include Display
 
@@ -15,7 +16,8 @@ class Board
   end
 
   def [](pos)
-    @grid[pos[0]][pos[1]]
+    x,y = pos
+    @grid[x][y]
   end
 
   def []=(pos,value)
@@ -27,9 +29,9 @@ class Board
       row.each_with_index do |cell, j|
         pos = [i,j]
         if (i == 0 || i == 2) && j.odd? || i == 1 && j.even?
-          self[pos] = Piece.new("red",[i,j],grid)
+          self[pos] = Piece.new("White",[i,j],self)
         elsif i == 6 && j.odd? || (i == 5 || i == 7) && j.even?
-          self[pos] = Piece.new("black",[i,j],grid)
+          self[pos] = Piece.new("Black",[i,j],self)
         else
           self[pos] = EmptySpace.new([i,j])
         end
@@ -42,8 +44,10 @@ class Board
       row.each_with_index do |cell, j|
         if [i,j] == @cursor
           print " #{cell.symbol}  ".colorize(background: :yellow)
+        elsif self[@cursor].valid_moves.include?([i,j])
+          print " #{cell.symbol}  ".colorize(background: :green)
         elsif (i.odd? && j.even?) || (i.even? && j.odd?)
-          print " #{cell.symbol.colorize(:red)}  ".colorize(background: :red)
+          print " #{cell.symbol}  ".colorize(background: :red)
         elsif (i.even? && j.even?) || (i.odd? && j.odd?)
           print " #{cell.symbol}  ".colorize(background: :blue)
         else
@@ -54,8 +58,13 @@ class Board
     end
   end
 
+  def on_board?(pos)
+    pos.all? { |coord| coord.between?(0,7) }
+  end
+
+  def empty_space?(pos)
+    self[pos].is_a?(EmptySpace)
+  end
+
 
 end
-
-b = Board.new
-b.render

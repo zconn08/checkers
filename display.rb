@@ -7,6 +7,14 @@ module Display
     "w" => [-1, 0]
   }
 
+  def debugging_output
+    puts "Cursor: #{cursor}"
+    puts "Position: #{self[cursor].pos}"
+    puts "Color: #{self[cursor].color}"
+    puts "Valid Moves: #{self[cursor].valid_moves}"
+    puts "Kinged?: #{self[cursor].kinged?}"
+  end
+
   def move_cursor(player_input)
     exit if player_input == "q"
     direction = MOVES[player_input]
