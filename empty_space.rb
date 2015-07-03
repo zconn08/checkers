@@ -18,4 +18,13 @@ class EmptySpace
   def kinged?
     ""
   end
+  def perform_moves!(move_sequence)
+  end
+  def perform_moves(move_sequence)
+  end
+
+  def dupe(board)
+    self.class.new(pos.dup)
+  end
+
 end

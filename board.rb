@@ -6,13 +6,18 @@ require 'colorize'
 class Board
 
   attr_accessor :grid, :cursor
+  attr_reader :grid
 
   include Display
 
-  def initialize
-    @grid = Array.new(8) { Array.new(8){} }
+  def self.blank_board
+    Board.new(false)
+  end
+
+  def initialize(empty_board = true)
+    @grid = Array.new(8) { Array.new(8) }
     @cursor = [0,0]
-    populate_grid
+    populate_grid if empty_board
   end
 
   def [](pos)
@@ -66,5 +71,24 @@ class Board
     self[pos].is_a?(EmptySpace)
   end
 
+  def black_win?
+    return @grid.flatten.none? {|piece| piece.color == "White" }
+  end
+
+  def white_win?
+    return @grid.flatten.none? { |piece| piece.color == "Black" }
+  end
+
+  def deep_dup
+    duped_board = Board.blank_board
+
+    grid.each_with_index do |row, i|
+      row.each_with_index do |cell, j|
+        duped_board[[i,j]] = cell.dupe(duped_board)
+      end
+    end
+
+    duped_board
+  end
 
 end
