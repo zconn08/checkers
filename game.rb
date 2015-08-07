@@ -79,9 +79,10 @@ class Game
     while ending_inputs.length < 2
       render_with_instructions
 
-      #debugging studd
       @board.debugging_output
-      p intermediate_steps
+      unless intermediate_steps.empty?
+        puts "intermediate steps: #{intermediate_steps}"
+      end
 
       cursor_move = current_player.get_cursor_movement
       board.move_cursor(cursor_move)

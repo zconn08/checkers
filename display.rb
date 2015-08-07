@@ -13,7 +13,7 @@ module Display
     puts "Color: #{self[cursor].color}"
     puts "Valid Moves: #{self[cursor].valid_moves}"
     puts "Kinged?: #{self[cursor].kinged?}"
-    puts "intermediate steps: "
+
   end
 
   def move_cursor(player_input)
